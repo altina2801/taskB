@@ -17,14 +17,31 @@ router.post('/register', async (req, res) => {
     }
 
     try {
+        // Check if email already exists
+        const existingUser = await usersCollection.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'Email is already registered' });
+        }
+
+        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
-        const result = await usersCollection.insertOne({ fullName, email, username, password: hashedPassword });
+
+        // Insert the new user
+        const result = await usersCollection.insertOne({
+            fullName,
+            email,
+            username,
+            password: hashedPassword
+        });
+
         res.status(201).json({ message: 'User registered successfully', userId: result.insertedId });
     } catch (error) {
         console.error('Error registering user:', error);
         res.status(500).json({ message: 'Error registering user' });
     }
 });
+
+
 
 // Login
 router.post('/login', async (req, res) => {
