@@ -1,14 +1,14 @@
 const express = require('express');
-const mongodb = require('../rent');  // Ensure this is the correct path to your MongoDB client
+const mongodb = require('../rent'); 
 const router = express.Router();
 const carsCollection = mongodb.collection('cars');
 
 router.post('/cars', async (req, res) => {
     let cars = req.body;
 
-    // If the request body is not an array, make it an array with one car
+    
     if (!Array.isArray(cars)) {
-        cars = [cars]; // Wrap the single car in an array
+        cars = [cars]; 
     }
 
     // Loop through each car and validate fields
@@ -39,7 +39,6 @@ router.post('/cars', async (req, res) => {
 router.get('/rental-cars', async (req, res) => {
     const { year, color, steering_type, number_of_seats } = req.query;
 
-    // Build the query object
     const query = {}; 
 
     if (year) query.year = parseInt(year); 
